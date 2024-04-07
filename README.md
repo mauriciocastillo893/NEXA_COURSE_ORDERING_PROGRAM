@@ -11,7 +11,7 @@ Created by his owner: **Mauricio Castillo**
     If you want to know what packages you've installed in a virtual environment, you can use the next
     command line where it shows all packages required for intallation:
 
-    pip freeze >  requeriments.txt
+    pip freeze >  requirements.txt
 
     * This one give you a requeriments.txt file, where you need to install (if you have a virtual environment
     you must be inside) using the next command line:
@@ -49,8 +49,6 @@ For a virtual environment in your computer where you can try the code without in
     Once you have stopped working, you can deactivate the virtual enviroment with the next command line:
 
     deactivate
-
-
 
 #### CUSTOMTKINTER
 ``2.-``
