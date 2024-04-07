@@ -5,7 +5,6 @@ Created by his owner: **Mauricio Castillo**
 
 ## GUIDE ABOUT INSTALLATIONS DONE
 ``RULES``
-
 ``REQUERIMENTS.TXT``
     If you want to know what packages you've installed in a virtual environment, you can use the next
     command line where it shows all packages required for intallation:
@@ -18,8 +17,8 @@ Created by his owner: **Mauricio Castillo**
     pip install -r requirements.txt
 
     * This one will satisfy all the required installations.
-    
 
+`` ``
 ``1.- VIRTUAL ENVIRONMENT``
 For a virtual environment in your computer where you can try the code without installing them for global
 >> Installation: **pip install virtualenv**
