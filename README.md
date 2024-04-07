@@ -3,8 +3,8 @@ A new technology from NEXA Industries, this project is able to organize all cour
 
 
 ## GUIDE ABOUT INSTALLATIONS DONE
-``VIRTUAL ENVIRONMENT``
-1.- **Virtual environment** for a virtual environment in your computer where you can try the code without install them for global
+``1.- VIRTUAL ENVIRONMENT``
+For a virtual environment in your computer where you can try the code without install them for global
 >> Installation: **pip install virtualenv**
 
 ``STEP 1``	
@@ -27,7 +27,7 @@ A new technology from NEXA Industries, this project is able to organize all cour
     in this step you need to change the name like in the previous step
 
 
-``==============================================================================================``
+````
 
 2.- **CustomTkinter** for the main interface.
 >> Installation: **pip install customtkinter**
