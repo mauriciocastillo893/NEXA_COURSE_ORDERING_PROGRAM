@@ -50,6 +50,8 @@ For a virtual environment in your computer where you can try the code without in
 
     deactivate
 
+
+
 #### CUSTOMTKINTER
 ``2.-``
 ``CUSTOMTKINTER`` For the main interface.
