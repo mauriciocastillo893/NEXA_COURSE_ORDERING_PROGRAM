@@ -4,6 +4,8 @@ A new technology from NEXA Industries, this project is able to organize all cour
 Created by his owner: **Mauricio Castillo** 
 
 ## GUIDE ABOUT INSTALLATIONS DONE
+
+#### RULES
 ``RULES``
 ``REQUERIMENTS.TXT``
     If you want to know what packages you've installed in a virtual environment, you can use the next
@@ -18,6 +20,7 @@ Created by his owner: **Mauricio Castillo**
 
     * This one will satisfy all the required installations.
 
+#### VIRTUAL ENVIRONMENT
 ``1.-``
 ``VIRTUAL ENVIRONMENT``
 For a virtual environment in your computer where you can try the code without installing them for global
@@ -47,5 +50,7 @@ For a virtual environment in your computer where you can try the code without in
 
     deactivate
 
-``2.- CUSTOMTKINTER`` For the main interface.
+#### CUSTOMTKINTER
+``2.-``
+``CUSTOMTKINTER`` For the main interface.
 >> Installation: **pip install customtkinter**
