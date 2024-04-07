@@ -4,7 +4,6 @@ A new technology from NEXA Industries, this project is able to organize all cour
 
 ## GUIDE ABOUT INSTALLATIONS DONE
 ``VIRTUAL ENVIRONMENT``
-
 1.- **Virtual environment** for a virtual environment in your computer where you can try the code without install them for global
 >> Installation: **pip install virtualenv**
 
