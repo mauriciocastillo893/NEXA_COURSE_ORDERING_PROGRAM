@@ -26,9 +26,10 @@ For a virtual environment in your computer where you can try the code without in
     * "my_virtualenv" is the name per default I chose, if you chose a different name in step 1, 
     in this step you need to change the name like in the previous step
 
+``STEP 3``
+    Once you have stopped working, you can deactivate the virtual enviroment with the next command line:
 
-###
-###
-###
+    deactivate
+
 ``2.- CUSTOMTKINTER`` For the main interface.
 >> Installation: **pip install customtkinter**
