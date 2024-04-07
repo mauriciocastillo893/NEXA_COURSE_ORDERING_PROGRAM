@@ -27,6 +27,7 @@ A new technology from NEXA Industries, this project is able to organize all cour
     in this step you need to change the name like in the previous step
 
 
-``CUSTOMTKINTER``
+``==============================================================================================``
+
 2.- **CustomTkinter** for the main interface.
 >> Installation: **pip install customtkinter**
