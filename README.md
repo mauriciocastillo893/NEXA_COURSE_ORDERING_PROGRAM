@@ -18,8 +18,8 @@ Created by his owner: **Mauricio Castillo**
 
     * This one will satisfy all the required installations.
 
-``   ``
-`` 1.- VIRTUAL ENVIRONMENT``
+``1.-``
+``VIRTUAL ENVIRONMENT``
 For a virtual environment in your computer where you can try the code without installing them for global
 >> Installation: **pip install virtualenv**
 
