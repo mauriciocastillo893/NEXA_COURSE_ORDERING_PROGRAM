@@ -4,6 +4,22 @@ A new technology from NEXA Industries, this project is able to organize all cour
 Created by his owner: **Mauricio Castillo** 
 
 ## GUIDE ABOUT INSTALLATIONS DONE
+``RULES``
+
+``REQUERIMENTS.TXT``
+    If you want to know what packages you've installed in a virtual environment, you can use the next
+    command line where it shows all packages required for intallation:
+
+    pip freeze >  requeriments.txt
+
+    * This one give you a requeriments.txt file, where you need to install (if you have a virtual environment
+    you must be inside) using the next command line:
+
+    pip install -r requirements.txt
+
+    * This one will satisfy all the required installations.
+    
+
 ``1.- VIRTUAL ENVIRONMENT``
 For a virtual environment in your computer where you can try the code without installing them for global
 >> Installation: **pip install virtualenv**
