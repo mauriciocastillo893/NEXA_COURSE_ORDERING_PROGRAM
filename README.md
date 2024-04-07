@@ -11,11 +11,15 @@ A new technology from NEXA Industries, this project is able to organize all cour
     Create the new virtual environment using the next command line 
         (you must do this step if you want to create a virtualenv for your pip installations)
     
-    Type the next command line in your text editor where "my_virtualenv" is the virtual environment name selected typed by you: 
+    Type the next command line in your text editor where "my_virtualenv" is the virtual environment name 
+    selected typed by you: 
+
     virtualenv my_virtualenv
 
 ``STEP 2``
-    Once created the virtual environment, we can activate this one using the next command line in your prefered text editor:
+    Once created the virtual environment, we can activate this one using the next command line in your 
+    prefered text editor:
+    
     my_virtualenv\Scripts\activate
     
     * You will see the name of your virtual environment in parentheses on the indicator of your terminal
