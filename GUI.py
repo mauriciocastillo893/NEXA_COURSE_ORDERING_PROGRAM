@@ -1,0 +1,192 @@
+# import tkinter
+import customtkinter as ctk
+from datetime import datetime
+
+ctk.set_appearance_mode('dark')
+ctk.set_default_color_theme("blue")
+
+# global width, height, is_file_uploaded, is_advacend_options_active
+width = 500
+height = 550
+is_advacend_options_active = False
+actual_date = datetime.now()
+date_format_default = formato_fecha = actual_date.strftime("%d/%m/%Y %H:%M")
+print(date_format_default)
+
+app = ctk.CTk() # Create the main application window
+
+def start_application():
+    progress_bar.start()
+    # progress_bar.step()
+
+def center_window(window):
+    # Calcular las coordenadas para centrar la ventana
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+    print(f"Screen width: {screen_width}, Screen height: {screen_height}")
+    print(f"Window width: {width}, Window height: {height}")
+    print(f"Window position: x={x}, y={y}")
+    window.geometry(f"{width}x{height}+{x}+{y}")
+
+def change_window_dimension():
+    global width, height, is_advacend_options_active, is_advanced_options_title
+    print("Window dimensions changed!")
+    if is_advacend_options_active:
+        is_advacend_options_active = False
+        show_advanced_option_button.configure(text="Mostrar")
+        height = 550
+        app.geometry(f"{width}x{height}")
+        config_550_height()
+    else:
+        is_advacend_options_active = True
+        show_advanced_option_button.configure(text="Ocultar")
+        height = 700
+        app.geometry(f"{width}x{height}")
+        config_700_height()
+    center_window(window=app) # Centrar la ventana después de cambiar su tamaño
+    
+def config_550_height():
+    title_label.place(relx=0.5, rely=0.08, anchor='center')
+    subtitle_label.place(relx=0.5, rely=0.17, anchor='center')
+    configuration_label.place(relx=0.5, rely=0.26, anchor='center')
+    first_step.place(relx=0.5, rely=0.33, anchor='center')
+    open_excel_button.place(relx=0.5, rely=0.39, anchor='center')
+    data_label.place(relx=0.5, rely=0.45, anchor='center')
+    second_step.place(relx=0.5, rely=0.5, anchor='center')
+    filter_combo_box.place(relx=0.52, rely=0.55, anchor='center')
+    option_label.place(relx=0.5, rely=0.6, anchor='center')
+    advanced_option_label.place(relx=0.1, rely=0.66, )
+    show_advanced_option_button.place(relx=0.65, rely=0.66, )
+    start_button.place(relx=0.5, rely=0.8, anchor='center')
+    progress_bar.place(relx=0.5, rely=0.885, anchor='center')
+    progress_bar_message.place(relx=-0.19, rely=0.91,)
+    nexa_message.place(relx=0.32, rely=0.91,)
+    
+    iterator_label.place(relx=0.22, rely=5.0,)
+    iterator_entry.place(relx=0.5, rely=5.0)
+    p_mut_cruza_label.place(relx=0.22, rely=5.0,)
+    p_mut_cruza_value.place(relx=0.5, rely=5.0)
+    p_mut_ind_label.place(relx=0.22, rely=5.0,)
+    p_mut_ind_value.place(relx=0.5, rely=5.0)
+    p_mut_gen_label.place(relx=0.22, rely=5.0,)
+    p_mut_gen_value.place(relx=0.5, rely=5.0)
+    
+def config_700_height():
+    title_label.place(relx=0.5, rely=0.08, anchor='center')
+    subtitle_label.place(relx=0.5, rely=0.155, anchor='center')
+    configuration_label.place(relx=0.5, rely=0.23, anchor='center')
+    first_step.place(relx=0.5, rely=0.29, anchor='center')
+    open_excel_button.place(relx=0.5, rely=0.34, anchor='center')
+    data_label.place(relx=0.5, rely=0.39, anchor='center')
+    second_step.place(relx=0.5, rely=0.435, anchor='center')
+    filter_combo_box.place(relx=0.52, rely=0.48, anchor='center')
+    option_label.place(relx=0.5, rely=0.525, anchor='center')
+    advanced_option_label.place(relx=0.1, rely=0.555, )
+    show_advanced_option_button.place(relx=0.65, rely=0.555, )
+    iterator_label.place(relx=0.22, rely=0.635,)
+    iterator_entry.place(relx=0.5, rely=0.63)
+    p_mut_cruza_label.place(relx=0.22, rely=0.685,)
+    p_mut_cruza_value.place(relx=0.5, rely=0.68)
+    p_mut_ind_label.place(relx=0.22, rely=0.735,)
+    p_mut_ind_value.place(relx=0.5, rely=0.73)
+    p_mut_gen_label.place(relx=0.22, rely=0.785,)
+    p_mut_gen_value.place(relx=0.5, rely=0.78)
+    start_button.place(relx=0.5, rely=0.865, anchor='center')
+    progress_bar.place(relx=0.5, rely=0.92, anchor='center')
+    progress_bar_message.place(relx=-0.19, rely=0.94,)
+    nexa_message.place(relx=0.32, rely=0.94,)
+    
+def open_excel():
+    global is_file_uploaded
+    print("Excel opened!")
+    date_label(is_file_uploaded=True)
+    
+def date_label(is_file_uploaded):
+    if is_file_uploaded:
+        data_label.configure(text=f"{date_format_default}")
+    else:
+        data_label.configure(text=f"No se ha subido nada aún")
+    
+def update_filter_combo_box(event):
+    selected_option = filter_combo_box.get()
+    option_label.configure(text=f"Opción seleccionada: {selected_option}")
+    print(selected_option)
+    
+app.geometry(f"{width}x{height}")
+center_window(window=app)
+
+title_label = ctk.CTkLabel(app, text="NEXA: COURSE ORDERING PROGRAM", fg_color="#d9d9d9", width=400, height=40, text_color="#000000", font=("Arial", 20, "bold"))
+title_label.place(relx=0.5, rely=0.08, anchor='center')
+
+subtitle_label = ctk.CTkLabel(app, text="Programa de ordenamiento de cursos \npara el desarrollo web", width=400, height=30, text_color="#fff", font=("Arial", 14, "bold"))
+subtitle_label.place(relx=0.5, rely=0.17, anchor='center')
+
+configuration_label = ctk.CTkLabel(app, text="CONFIGURACIÓN", fg_color="#d9d9d9", width=400, height=40, text_color="#000000", font=("Arial", 20, "bold"))
+configuration_label.place(relx=0.5, rely=0.26, anchor='center')
+
+first_step = ctk.CTkLabel(app, text="1) Carga de cursos", width=400, height=20, text_color="#fff", font=("Arial", 14, "bold"))
+first_step.place(relx=0.5, rely=0.33, anchor='center')
+
+open_excel_button = ctk.CTkButton(app, text="Abrir Excel", command=open_excel, height=40, width=120,fg_color="#868686", font=("Arial", 14, "bold"), text_color="#000000", corner_radius=0)
+open_excel_button.place(relx=0.5, rely=0.39, anchor='center')
+
+data_label = ctk.CTkLabel(app, width=400, text="No se ha subido nada aún", height=20, text_color="#fff", font=("Arial", 12, "bold"))
+data_label.place(relx=0.5, rely=0.45, anchor='center')
+
+second_step = ctk.CTkLabel(app, text="2) Obtener lista de cursos por", width=400, height=20, text_color="#fff", font=("Arial", 14, "bold"))
+second_step.place(relx=0.5, rely=0.5, anchor='center')
+
+filter_combo_box = ctk.CTkComboBox(app, width=400,values=["a) Facil a dificil", "b) Dificil a facil", "c) Menor o mayor tiempo", "d) Mayor a menor tiempo", "e) Pocos a muchos requisitos", "f) Muchos a pocos requisitos"], command=update_filter_combo_box)
+filter_combo_box.place(relx=0.52, rely=0.55, anchor='center')
+filter_combo_box.configure(width=165, height=30)
+
+option_label = ctk.CTkLabel(app, text="Ninguna opción seleccionada", height=20, text_color="#fff", font=("Arial", 12, "bold"))
+option_label.place(relx=0.5, rely=0.6, anchor='center')
+
+advanced_option_label = ctk.CTkLabel(app, text="OPCIONES AVANZADAS", fg_color="#d9d9d9", width=250, height=40, text_color="#000000", font=("Arial", 20, "bold"))
+advanced_option_label.place(relx=0.1, rely=0.66, )
+
+show_advanced_option_button = ctk.CTkButton(app, text="Mostrar", command=change_window_dimension, height=40, width=125,fg_color="#868686", font=("Arial", 14, "bold"), text_color="#000000", corner_radius=0)
+show_advanced_option_button.place(relx=0.65, rely=0.66, )
+
+iterator_label = ctk.CTkLabel(app, text="Iteraciones.", height=20, text_color="#fff", font=("Arial", 13, "bold"))
+iterator_label.place(relx=0.22, rely=5.0,)
+
+iterator_entry = ctk.CTkEntry(app, placeholder_text="Default 100%", placeholder_text_color="#000000", bg_color="#d9d9d9", corner_radius=0, border_color="#d9d9d9", fg_color="#d9d9d9", text_color='#000000')
+iterator_entry.place(relx=0.5, rely=5.0)
+
+p_mut_cruza_label = ctk.CTkLabel(app, text="P. mut. cruza. (%)", height=20, text_color="#fff", font=("Arial", 13, "bold"))
+p_mut_cruza_label.place(relx=0.22, rely=5.0,)
+
+p_mut_cruza_value = ctk.CTkEntry(app, placeholder_text="Default 100%", placeholder_text_color="#000000", bg_color="#d9d9d9", corner_radius=0, border_color="#d9d9d9", fg_color="#d9d9d9", text_color='#000000')
+p_mut_cruza_value.place(relx=0.5, rely=5.0)
+
+p_mut_ind_label = ctk.CTkLabel(app, text="P. mut. ind. (%)", height=20, text_color="#fff", font=("Arial", 13, "bold"))
+p_mut_ind_label.place(relx=0.22, rely=5.0,)
+
+p_mut_ind_value = ctk.CTkEntry(app, placeholder_text="Default 100%", placeholder_text_color="#000000", bg_color="#d9d9d9", corner_radius=0, border_color="#d9d9d9", fg_color="#d9d9d9", text_color='#000000')
+p_mut_ind_value.place(relx=0.5, rely=5.0)
+
+p_mut_gen_label = ctk.CTkLabel(app, text="P. mut. gen. (%)", height=20, text_color="#fff", font=("Arial", 13, "bold"))
+p_mut_gen_label.place(relx=0.22, rely=5.0,)
+
+p_mut_gen_value = ctk.CTkEntry(app, placeholder_text="Default 100%", placeholder_text_color="#000000", bg_color="#d9d9d9", corner_radius=0, border_color="#d9d9d9", fg_color="#d9d9d9", text_color='#000000')
+p_mut_gen_value.place(relx=0.5, rely=5.0)
+
+start_button = ctk.CTkButton(app, text="SOLICITAR LISTA DE CURSOS", command=start_application, height=40, width=400,fg_color="#868686", font=("Arial", 20, "bold"), text_color="#000000", corner_radius=0)
+start_button.place(relx=0.5, rely=0.8, anchor='center')
+
+progress_bar = ctk.CTkProgressBar(app, width=400, height=20, corner_radius=0)
+progress_bar.place(relx=0.5, rely=0.885, anchor='center')
+progress_bar.configure(mode="determinate")
+progress_bar.set(0)
+
+progress_bar_message = ctk.CTkLabel(app, width=400, text="Cargando... 0% de 100%", height=10, text_color="#fff", font=("Arial", 10, "bold"))
+progress_bar_message.place(relx=-0.19, rely=0.91,)
+
+nexa_message = ctk.CTkLabel(app, width=400, text="NEXA Industries from Mauricio Castillo", height=10, text_color="#fff", font=("Arial", 10, "bold"))
+nexa_message.place(relx=0.32, rely=0.91,)
+
+app.mainloop()
