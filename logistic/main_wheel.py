@@ -3,6 +3,7 @@ from datetime import datetime
 import openpyxl
 import pandas as pd
 from tkinter import messagebox
+import logistic.auxiliar_wheel as aux
 
 epochs = -1
 p_mut_cruza = 100
@@ -46,15 +47,22 @@ def form_pairs(data_list):
     print("\n\n\nFormando pares de datos...")
     first_pair = data_list
     second_pair = data_list[::-1]
+    print("Primer par:", first_pair)
+    print("Segundo par:", second_pair)
     information_crossover(first_pair, second_pair)
-    # print("Primer par:", first_pair)
-    # print("Segundo par:", second_pair)
     # Añadir validacion de que si ya está ordenado segun f(x) retorne el arreglo y ya no siga con el proceso
     
 def information_crossover(first_pair, second_pair):
     print("\n\nCruce de información")
     print("Parametros dados:", "epochs:", epochs, "p_mut_cruza:", p_mut_cruza, "p_mut_ind:", p_mut_ind, "p_mut_gen:", p_mut_gen,)
-    
+    print("length of first pair:", len(first_pair), "length of second pair:", len(second_pair))
+    if len(first_pair) >= 3:
+        print("Se puede realizar el cruce de información.")
+        arr1, arr2 = aux.swap_elements(first_pair, second_pair, p_mut_cruza)
+        print("Arrays received:\n", arr1, "\n", arr2)
+    else:
+        print("No se puede realizar el cruce de información, la longitud de los pares es menor a 3. Pasa directo a mutación.")
+        
 def mutation():
     print("\n\nMutación")
     
