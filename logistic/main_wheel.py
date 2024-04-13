@@ -60,14 +60,19 @@ def information_crossover(first_pair, second_pair):
         print("Se puede realizar el cruce de información.")
         arr1, arr2 = aux.swap_elements(first_pair, second_pair, p_mut_cruza)
         print("Arrays received:\n", arr1, "\n", arr2)
+        mutation(arr1, arr2)
     else:
         print("No se puede realizar el cruce de información, la longitud de los pares es menor a 3. Pasa directo a mutación.")
         
-def mutation():
+def mutation(first_pair, second_pair):
     print("\n\nMutación")
+    print(f"In mutation received arrays:\n{first_pair}\n{second_pair}")
+    
     
 def pruning():
     print("\n\nPoda")
+    # Los mejores son puestos debajo de los 2 primeros creados al inicio en el excel de "reports" actual del programa, y hasta
+    # abajo despues de colocar cada resultado por epoca, se pone el mejor de todos los resultados.
 
 def save_default_data_to_excel(data):
     # Get the current date and time
