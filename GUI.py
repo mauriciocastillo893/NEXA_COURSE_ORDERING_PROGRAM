@@ -1,11 +1,15 @@
 # import tkinter
+from tkinter import messagebox
 import customtkinter as ctk
 from datetime import datetime
+import logistic.excel_wheel as excel_wheel
+import logistic.main_wheel as main_wheel
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme("blue")
 
 # global width, height, is_file_uploaded, is_advacend_options_active
+is_file_uploaded = False
 width = 500
 height = 550
 is_advacend_options_active = False
@@ -16,7 +20,10 @@ print(date_format_default)
 app = ctk.CTk() # Create the main application window
 
 def start_application():
-    progress_bar.start()
+    data = obtain_data()
+    if(data["status"]):
+        progress_bar.start()
+        main_wheel.save_data(data)
     # progress_bar.step()
 
 def center_window(window):
@@ -99,13 +106,19 @@ def config_700_height():
     nexa_message.place(relx=0.32, rely=0.94,)
     
 def open_excel():
-    global is_file_uploaded
-    print("Excel opened!")
-    date_label(is_file_uploaded=True)
+    result = excel_wheel.open_excel_file()
+    if "error" not in result:  
+        messagebox.showinfo("ExcelWhile", "Excel cargado exitosamente.")
+        date_label(True)
+    else:    
+        messagebox.showerror("ExcelWhile", f"Hubo un error al cargar el excel: {result['error']}")
+        data_label.configure(text=f"{result['error']}")
     
-def date_label(is_file_uploaded):
-    if is_file_uploaded:
-        data_label.configure(text=f"{date_format_default}")
+def date_label(file_ready):
+    global is_file_uploaded
+    if file_ready:
+        data_label.configure(text=f"Última revisión: {date_format_default}")
+        is_file_uploaded = True
     else:
         data_label.configure(text=f"No se ha subido nada aún")
     
@@ -113,6 +126,56 @@ def update_filter_combo_box(event):
     selected_option = filter_combo_box.get()
     option_label.configure(text=f"Opción seleccionada: {selected_option}")
     print(selected_option)
+    
+def obtain_data():
+    global is_file_uploaded
+    selected_option = filter_combo_box.get()
+    iterator = iterator_entry.get() if len(iterator_entry.get()) else "-1"
+    p_mut_cruza = p_mut_cruza_value.get() if len(p_mut_cruza_value.get()) else "100"
+    p_mut_ind = p_mut_ind_value.get() if len(p_mut_ind_value.get()) else "100"
+    p_mut_gen = p_mut_gen_value.get() if len(p_mut_gen_value.get()) else "100"
+
+    if not iterator == "-1":
+        if iterator.isdigit():
+            pass
+
+        else:
+            messagebox.showerror("Error", "El valor de Iteraciones debe ser un número entero positivo.")
+            return {"status": False}
+
+
+    if not p_mut_cruza.isdigit():
+        messagebox.showerror("Error", "El valor de P. mut. cruza debe ser un número entero positivo.")
+        return {"status": False}
+
+
+    if not p_mut_ind.isdigit():
+        messagebox.showerror("Error", "El valor de P. mut. ind. debe ser un número entero positivo.")
+        return {"status": False}
+
+
+    if not p_mut_gen.isdigit():
+        messagebox.showerror("Error", "El valor de P. mut. gen. debe ser un número entero positivo.")
+        return {"status": False}
+
+
+    iterator = int(iterator)
+    p_mut_cruza = int(p_mut_cruza)
+    p_mut_ind = int(p_mut_ind)
+    p_mut_gen = int(p_mut_gen)
+    
+    print(f"Selected option: {selected_option}, iterator: {iterator}, p_mut_cruza: {p_mut_cruza}, p_mut_ind: {p_mut_ind}, p_mut_gen: {p_mut_gen}")
+    if len(selected_option) and is_file_uploaded:
+        return {"status": True, "selected_option": selected_option, "iterator": iterator, "p_mut_cruza": p_mut_cruza, "p_mut_ind": p_mut_ind, "p_mut_gen": p_mut_gen}
+    else:
+        message = "No se pudo iniciar el programa. \nPor favor, Cargue los siguientes archivos:"
+        if not is_file_uploaded:
+            message += "\n- Archivo Excel"
+        if not len(selected_option):
+            message += "\n- La opción de ordenamiento"
+        messagebox.showerror("ExcelWhile", message)
+
+        return {"status": False}
     
 app.geometry(f"{width}x{height}")
 center_window(window=app)
@@ -142,7 +205,7 @@ filter_combo_box = ctk.CTkComboBox(app, width=400,values=["a) Facil a dificil", 
 filter_combo_box.place(relx=0.52, rely=0.55, anchor='center')
 filter_combo_box.configure(width=165, height=30)
 
-option_label = ctk.CTkLabel(app, text="Ninguna opción seleccionada", height=20, text_color="#fff", font=("Arial", 12, "bold"))
+option_label = ctk.CTkLabel(app, text=f"Opción por default: {filter_combo_box.get()}", height=20, text_color="#fff", font=("Arial", 12, "bold"))
 option_label.place(relx=0.5, rely=0.6, anchor='center')
 
 advanced_option_label = ctk.CTkLabel(app, text="OPCIONES AVANZADAS", fg_color="#d9d9d9", width=250, height=40, text_color="#000000", font=("Arial", 20, "bold"))

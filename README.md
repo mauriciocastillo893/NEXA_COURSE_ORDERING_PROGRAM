@@ -54,3 +54,8 @@ For a virtual environment in your computer where you can try the code without in
 ``2.-``
 ``CUSTOMTKINTER`` For the main interface.
 >> Installation: **pip install customtkinter**
+
+#### OPENPYXL
+```3.-``
+``OPENPYXL`` To be able to read, save and modify elements from a excel file
+>> Installation: **pip install openpyxl**
