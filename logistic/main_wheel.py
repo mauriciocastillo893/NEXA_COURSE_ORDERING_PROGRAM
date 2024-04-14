@@ -5,24 +5,30 @@ import pandas as pd
 from tkinter import messagebox
 import logistic.auxiliar_wheel as aux
 
+selected_option = 'a'
 epochs = -1
 p_mut_cruza = 100
 p_mut_ind = 100
 p_mut_gen = 100
+current_epoch = 0
 
 def save_data(data):
-    global epochs, p_mut_cruza, p_mut_ind, p_mut_gen
-    print(f"Guardando los datos: {data}")
+    global epochs, p_mut_cruza, p_mut_ind, p_mut_gen, selected_option
+    # save_default_data_to_excel(data)
+    selected_option = data['selected_option'][0]
     epochs = data['iterator']
     p_mut_cruza = data['p_mut_cruza']
     p_mut_ind = data['p_mut_ind']
     p_mut_gen = data['p_mut_gen']
-    # save_default_data_to_excel(data)
+    
+    print("\n[PARAMETERS]",)
+    print("\tEpochs:", epochs, "\n\tP_mut_cruza:", p_mut_cruza, "\n\tP_mut_ind:", p_mut_ind, "\n\tP_mut_gen:", p_mut_gen, "\n\tSelected option:", selected_option, "\n\tCurrent epoch:", current_epoch)
+    
     result = upload_data_by_parameter(data['selected_option'][0])
     if result:
         form_pairs(result)
     else:
-        print("Error al cargar los datos.")
+        print("[SYSTEM] Data couldn't be uploaded. Please check the parameter 'selected_option' value.")
     
 def upload_data_by_parameter(parameter):
     if parameter == 'a' or parameter == 'b':
@@ -44,30 +50,41 @@ def upload_data_by_parameter(parameter):
         return False
 
 def form_pairs(data_list):
-    print("\n\n\nFormando pares de datos...")
+    print("\n[FORMING PAIRS] Epoch: ", current_epoch)
     first_pair = data_list
-    second_pair = data_list[::-1]
-    print("Primer par:", first_pair)
-    print("Segundo par:", second_pair)
+    first_pair = [f"{value}-P{index + 1}" for index, value in enumerate(first_pair)]
+    second_pair = first_pair[::-1]
+    print("[FORMING PAIRS] First pair", first_pair)
+    print("[FORMING PAIRS] Second pair", second_pair)
     information_crossover(first_pair, second_pair)
     # Añadir validacion de que si ya está ordenado segun f(x) retorne el arreglo y ya no siga con el proceso
     
 def information_crossover(first_pair, second_pair):
-    print("\n\nCruce de información")
-    print("Parametros dados:", "epochs:", epochs, "p_mut_cruza:", p_mut_cruza, "p_mut_ind:", p_mut_ind, "p_mut_gen:", p_mut_gen,)
-    print("length of first pair:", len(first_pair), "length of second pair:", len(second_pair))
+    print("\n[CROSSOVER] Epoch: ", current_epoch)
     if len(first_pair) >= 3:
-        print("Se puede realizar el cruce de información.")
-        arr1, arr2 = aux.swap_elements(first_pair, second_pair, p_mut_cruza)
-        print("Arrays received:\n", arr1, "\n", arr2)
+        print("[CROSSOVER] Crossover can be performed. Arrays are greater than 3 elements.")
+        arr1, arr2 = aux.swap_elements(first_pair, second_pair, p_mut_cruza, p_mut_ind)
         mutation(arr1, arr2)
     else:
-        print("No se puede realizar el cruce de información, la longitud de los pares es menor a 3. Pasa directo a mutación.")
+        print("[CROSSOVER] Crossover can't be performed. Arrays are less than 3 elements.")
         
 def mutation(first_pair, second_pair):
-    print("\n\nMutación")
-    print(f"In mutation received arrays:\n{first_pair}\n{second_pair}")
+    global p_mut_gen
+    percentage_per_element = 100/len(first_pair)
     
+    print(f"\n[MUTATION] Epoch: {current_epoch}")
+    print("[MUTATION] Percentage per element:", percentage_per_element, "%")
+    operator = aux.define_operator(selected_option)
+    print(f"[MUTATION] Array parameters: \n\tFirst: {first_pair}\n\tSecond: {second_pair}")
+    
+    # Verificar el porcentaje de mutacion para ver si se aplica el 100% = len(first_pair) o no
+    # Falta implementar la mutación de los datos del arreglo 2
+
+    arr1 = aux.mutation_for_first_array(first_pair, operator, p_mut_gen, percentage_per_element)
+        
+    print("\n\t[MUTATION] Mutation for second array initialized")
+    
+    # Pasar a pruning()
     
 def pruning():
     print("\n\nPoda")

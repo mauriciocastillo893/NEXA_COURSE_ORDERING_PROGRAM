@@ -4,6 +4,7 @@ import customtkinter as ctk
 from datetime import datetime
 import logistic.excel_wheel as excel_wheel
 import logistic.main_wheel as main_wheel
+import os
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme("blue")
@@ -15,26 +16,36 @@ height = 550
 is_advacend_options_active = False
 actual_date = datetime.now()
 date_format_default = formato_fecha = actual_date.strftime("%d/%m/%Y %H:%M")
-print(date_format_default)
 
 app = ctk.CTk() # Create the main application window
 
+times = 0
+
 def start_application():
+    global times
     data = obtain_data()
     if(data["status"]):
+        times += 1
+        if times > 1:
+            clear_console()
+            system_message()
+            pass
         progress_bar.start()
         main_wheel.save_data(data)
     # progress_bar.step()
 
 def center_window(window):
+    global width, height, screen_height, screen_width, x, y
     # Calcular las coordenadas para centrar la ventana
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
     x = (screen_width - width) // 2
     y = (screen_height - height) // 2
-    print(f"Screen width: {screen_width}, Screen height: {screen_height}")
-    print(f"Window width: {width}, Window height: {height}")
-    print(f"Window position: x={x}, y={y}")
+    print("[SYSTEM] Initializing window...")
+    print("[SYSTEM] Date:", date_format_default)
+    print(f"[SYSTEM] Screen width: {screen_width}, Screen height: {screen_height}")
+    print(f"[SYSTEM] Window width: {width}, Window height: {height}")
+    print(f"[SYSTEM] Window position: x={x}, y={y}\n")
     window.geometry(f"{width}x{height}+{x}+{y}")
 
 def change_window_dimension():
@@ -164,7 +175,6 @@ def obtain_data():
     p_mut_ind = int(p_mut_ind)
     p_mut_gen = int(p_mut_gen)
     
-    print(f"Selected option: {selected_option}, iterator: {iterator}, p_mut_cruza: {p_mut_cruza}, p_mut_ind: {p_mut_ind}, p_mut_gen: {p_mut_gen}")
     if len(selected_option) and is_file_uploaded:
         return {"status": True, "selected_option": selected_option, "iterator": iterator, "p_mut_cruza": p_mut_cruza, "p_mut_ind": p_mut_ind, "p_mut_gen": p_mut_gen}
     else:
@@ -176,8 +186,19 @@ def obtain_data():
         messagebox.showerror("ExcelWhile", message)
 
         return {"status": False}
+
+def clear_console():
+    os.system('cls')
     
+def system_message():
+    print("[SYSTEM] Initializing window...")
+    print("[SYSTEM] Date:", date_format_default)
+    print(f"[SYSTEM] Screen width: {screen_width}, Screen height: {screen_height}")
+    print(f"[SYSTEM] Window width: {width}, Window height: {height}")
+    print(f"[SYSTEM] Window position: x={x}, y={y}\n")
+
 app.geometry(f"{width}x{height}")
+clear_console()
 center_window(window=app)
 
 title_label = ctk.CTkLabel(app, text="NEXA: COURSE ORDERING PROGRAM", fg_color="#d9d9d9", width=400, height=40, text_color="#000000", font=("Arial", 20, "bold"))
