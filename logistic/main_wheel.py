@@ -26,7 +26,7 @@ def save_data(data):
     
     result = upload_data_by_parameter(data['selected_option'][0])
     if result:
-        form_pairs(result)
+        form_pairs(result, [])
     else:
         print("[SYSTEM] Data couldn't be uploaded. Please check the parameter 'selected_option' value.")
     
@@ -49,11 +49,16 @@ def upload_data_by_parameter(parameter):
         messagebox.showerror("Error", f"Opción {parameter} no válida, se encuentra fuera de alcance.")
         return False
 
-def form_pairs(data_list):
+def form_pairs(data_list, second_data_list):
     print("\n[FORMING PAIRS] Epoch: ", current_epoch)
     first_pair = data_list
     first_pair = [f"{value}-P{index + 1}" for index, value in enumerate(first_pair)]
-    second_pair = first_pair[::-1]
+    if not len(second_data_list):
+        second_pair = first_pair[::-1]
+        print("[FORMING PAIRS] Second data list is empty. Creating second pair from first pair (default).")
+    else:
+        second_pair = []
+        print("[FORMING PAIRS] Second data list exists, importing this one.")
     print("[FORMING PAIRS] First pair", first_pair)
     print("[FORMING PAIRS] Second pair", second_pair)
     information_crossover(first_pair, second_pair)
@@ -71,23 +76,36 @@ def information_crossover(first_pair, second_pair):
 def mutation(first_pair, second_pair):
     global p_mut_gen
     percentage_per_element = 100/len(first_pair)
-    
+    jumps = int(p_mut_gen//percentage_per_element)
+
     print(f"\n[MUTATION] Epoch: {current_epoch}")
     print("[MUTATION] Percentage per element:", percentage_per_element, "%")
+    
     operator = aux.define_operator(selected_option)
+    
+    print("[MUTATION] Jumps required:", jumps)
     print(f"[MUTATION] Array parameters: \n\tFirst: {first_pair}\n\tSecond: {second_pair}")
     
-    # Verificar el porcentaje de mutacion para ver si se aplica el 100% = len(first_pair) o no
-    # Falta implementar la mutación de los datos del arreglo 2
-
-    arr1 = aux.mutation_for_first_array(first_pair, operator, p_mut_gen, percentage_per_element)
+    print("\n[MUTATION] Mutation for FIRST ARRAY initialized")
+    arr1 = aux.mutation_for_array_parameter(first_pair, operator, p_mut_gen, percentage_per_element, jumps)
+    
+    print("\n[MUTATION] Mutation for SECOND ARRAY initialized")
+    arr2 = aux.mutation_for_array_parameter(second_pair, operator, p_mut_gen, percentage_per_element, jumps)
         
-    print("\n\t[MUTATION] Mutation for second array initialized")
+    pruning(arr1, arr2, operator, percentage_per_element)
     
-    # Pasar a pruning()
+def pruning(first_pair, second_pair, operator, percentage_per_element):
+    print("\n[PRUNING] Epoch: ", current_epoch)
+    print("[PRUNING] Operator to use:", operator)
+    print("[PRUNING] Percentage per element:", percentage_per_element, "%")
+    print("[PRUNING] First pair:\n\t", first_pair)
+    print("[PRUNING] Second pair:\n\t", second_pair, "\n")
     
-def pruning():
-    print("\n\nPoda")
+    print("[PRUNING] Calculating fitness for FIRST ARRAY")
+    fitness_arr1 = aux.calculate_fitness(first_pair, operator, percentage_per_element)
+    
+    print("[PRUNING] Calculating fitness for SECOND ARRAY")
+    fitness_arr2 = aux.calculate_fitness(second_pair, operator, percentage_per_element)
     # Los mejores son puestos debajo de los 2 primeros creados al inicio en el excel de "reports" actual del programa, y hasta
     # abajo despues de colocar cada resultado por epoca, se pone el mejor de todos los resultados.
 

@@ -267,7 +267,8 @@ progress_bar.place(relx=0.5, rely=0.885, anchor='center')
 progress_bar.configure(mode="determinate")
 progress_bar.set(0)
 
-progress_bar_message = ctk.CTkLabel(app, width=400, text="Cargando... 0% de 100%", height=10, text_color="#fff", font=("Arial", 10, "bold"))
+# progress_bar_message = ctk.CTkLabel(app, width=400, text="Cargando... 0% de 100%", height=10, text_color="#fff", font=("Arial", 10, "bold"))
+progress_bar_message = ctk.CTkLabel(app, width=400, text="[✔] Listo para inicializar", height=10, text_color="#fff", font=("Arial", 10, "bold"))
 progress_bar_message.place(relx=-0.19, rely=0.91,)
 
 nexa_message = ctk.CTkLabel(app, width=400, text="NEXA Industries from Mauricio Castillo", height=10, text_color="#fff", font=("Arial", 10, "bold"))

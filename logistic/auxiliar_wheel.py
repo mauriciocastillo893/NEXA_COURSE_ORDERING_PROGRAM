@@ -8,7 +8,7 @@ def swap_elements(arr1, arr2, p_mut_cruza, p_mut_ind):
         return arr1, arr2
 
     percentage_per_element = 100 // (len(arr1))
-    print("\n\t[AUXILIAR WHEEL]\n\tPercentage per element:", percentage_per_element, "%")
+    print("\n\t[AUXILIAR WHEEL]\n\tPERCENTAGE PER ELEMENT: [", percentage_per_element, "% ]")
     
     if(percentage_per_element <= p_mut_ind):
         print("\tRULE SET:", len(arr1), "elements could be crossed\n")
@@ -81,35 +81,49 @@ def define_operator(selected_option):
         print("[MUTATION] RULE SET: Ordening from greater to lower")
         return ">"
 
-def mutation_for_first_array(first_pair, operator, p_mut_gen, percentage_per_element):
+def mutation_for_array_parameter(array_parameter, operator, p_mut_gen, percentage_per_element, jumps):
     percentage_applied = 0
     changed_applies = 0
     
-    print("\n\t[MUTATION] Mutation for FIRST ARRAY initialized")
-    
-    for i in range(len(first_pair)):
-        condition = "{} {} {}".format(first_pair[i-changed_applies].split("-")[0], operator, first_pair[len(first_pair)-1].split('-')[0])
-            
+    print("\t[AUXILIAR WHEEL]")
+    for i in range(jumps):
         percentage_applied += percentage_per_element
-            
+        
         if percentage_applied <= p_mut_gen:
+            condition = "{} {} {}".format(array_parameter[i-changed_applies].split("-")[0], operator, array_parameter[len(array_parameter)-1].split('-')[0])
             print("\n\t[MUTATION] Condition:", condition)
+            
             if eval(condition):
-                print(f"\t[MUTATION] [X] No changes needed in {first_pair[i-changed_applies]} <-> {first_pair[len(first_pair)-1]}")
-                pass
+                print(f"\t[MUTATION] [X] No changes needed in {array_parameter[i-changed_applies]} <-> {array_parameter[len(array_parameter)-1]}")
             else:
-                if i-changed_applies >= len(first_pair)-1:
-                    print(f"\t[MUTATION] [X] No changes made in {first_pair[i-changed_applies]} <-> {first_pair[len(first_pair)-1]}")
+                if i-changed_applies >= len(array_parameter)-1:
+                    print(f"\t[MUTATION] [X] No changes made in {array_parameter[i-changed_applies]} <-> {array_parameter[len(array_parameter)-1]}")
                 else:
-                    print(f"\t[MUTATION] [✔] Changing {first_pair[i-changed_applies]} <-> {first_pair[len(first_pair)-1]}")
-                    first_pair.append(first_pair[i-changed_applies])
-                    first_pair.pop(i-changed_applies)
+                    print(f"\t[MUTATION] [✔] Changing {array_parameter[i-changed_applies]} <-> {array_parameter[len(array_parameter)-1]}")
+                    array_parameter.append(array_parameter[i-changed_applies])
+                    array_parameter.pop(i-changed_applies)
                     changed_applies += 1
-                    print("\t[MUTATION] [N] New first_array got:\n\t\t", first_pair)
+                    print("\t[MUTATION] [N] New first_array got:\n\t\t", array_parameter)
                     
             print("\t[MUTATION] Percentage completed:", percentage_applied, " %")
         else:
             break
         
     print(f"\n\t[MUTATION] >> Mutation process completed by reaching the mutation percentage parameter [{p_mut_gen} %]. \n\t[MUTATION] >> Completed percentage:", percentage_applied, "% from", "100 % (default)" )
+    return array_parameter
+
+def calculate_fitness(array, operator, percentage_per_element):
+    operator += "="
+    fitness_percentage = 100/(len(array)-1)
+    fitness = 0
     
+    for i in range(len(array)-1):
+        condition = "{} {} {}".format(array[i].split("-")[0], operator, array[i+1].split('-')[0])
+        print(f"\t* Condition", condition, f": is : {eval(condition)}")
+        if eval(condition):
+            fitness += fitness_percentage
+        else:
+            pass
+    print("\t[AUXILIAR WHEEL]")
+    print("\t[FITNESS] Fitness calculated:", fitness, "%\n")
+    return fitness
