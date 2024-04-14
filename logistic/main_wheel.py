@@ -11,10 +11,12 @@ p_mut_cruza = 100
 p_mut_ind = 100
 p_mut_gen = 100
 current_epoch = 0
+fitness = 100
 
 def save_data(data):
-    global epochs, p_mut_cruza, p_mut_ind, p_mut_gen, selected_option
+    global epochs, p_mut_cruza, p_mut_ind, p_mut_gen, selected_option, fitness
     # save_default_data_to_excel(data)
+    fitness = data['fitness']
     selected_option = data['selected_option'][0]
     epochs = data['iterator']
     p_mut_cruza = data['p_mut_cruza']
@@ -22,7 +24,7 @@ def save_data(data):
     p_mut_gen = data['p_mut_gen']
     
     print("\n[PARAMETERS]",)
-    print("\tEpochs:", epochs, "\n\tP_mut_cruza:", p_mut_cruza, "\n\tP_mut_ind:", p_mut_ind, "\n\tP_mut_gen:", p_mut_gen, "\n\tSelected option:", selected_option, "\n\tCurrent epoch:", current_epoch)
+    print("\tEpochs:", epochs, "\n\tFitness:", fitness,"\n\tP_mut_cruza:", p_mut_cruza, "\n\tP_mut_ind:", p_mut_ind, "\n\tP_mut_gen:", p_mut_gen, "\n\tSelected option:", selected_option, "\n\tCurrent epoch:", current_epoch)
     
     result = upload_data_by_parameter(data['selected_option'][0])
     if result:
@@ -50,19 +52,23 @@ def upload_data_by_parameter(parameter):
         return False
 
 def form_pairs(data_list, second_data_list):
-    print("\n[FORMING PAIRS] Epoch: ", current_epoch)
-    first_pair = data_list
-    first_pair = [f"{value}-P{index + 1}" for index, value in enumerate(first_pair)]
-    if not len(second_data_list):
-        second_pair = first_pair[::-1]
-        print("[FORMING PAIRS] Second data list is empty. Creating second pair from first pair (default).")
+    # Asignar los 2 arrays al excel de "reports" actual del programa
+    if epochs == -1 or current_epoch < epochs:
+        print("\n[FORMING PAIRS] Epoch: ", current_epoch)
+        first_pair = data_list
+        first_pair = [f"{value}-P{index + 1}" for index, value in enumerate(first_pair)]
+        if not len(second_data_list):
+            second_pair = first_pair[::-1]
+            print("[FORMING PAIRS] Second data list is empty. Creating second pair from first pair (default).")
+        else:
+            second_pair = []
+            print("[FORMING PAIRS] Second data list exists, importing this one.")
+        print("[FORMING PAIRS] First pair", first_pair)
+        print("[FORMING PAIRS] Second pair", second_pair)
+        information_crossover(first_pair, second_pair)
+        # Añadir validacion de que si ya está ordenado segun f(x) retorne el arreglo y ya no siga con el proceso
     else:
-        second_pair = []
-        print("[FORMING PAIRS] Second data list exists, importing this one.")
-    print("[FORMING PAIRS] First pair", first_pair)
-    print("[FORMING PAIRS] Second pair", second_pair)
-    information_crossover(first_pair, second_pair)
-    # Añadir validacion de que si ya está ordenado segun f(x) retorne el arreglo y ya no siga con el proceso
+        print(f"\n[FORMING PAIRS] Process finished. Epochs limit reached.", "Current epoch:", current_epoch, "Epochs:", "Obtain the best fitness value." if epochs == -1 else epochs)
     
 def information_crossover(first_pair, second_pair):
     print("\n[CROSSOVER] Epoch: ", current_epoch)
@@ -95,6 +101,7 @@ def mutation(first_pair, second_pair):
     pruning(arr1, arr2, operator, percentage_per_element)
     
 def pruning(first_pair, second_pair, operator, percentage_per_element):
+    operator += "="
     print("\n[PRUNING] Epoch: ", current_epoch)
     print("[PRUNING] Operator to use:", operator)
     print("[PRUNING] Percentage per element:", percentage_per_element, "%")

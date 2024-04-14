@@ -113,7 +113,6 @@ def mutation_for_array_parameter(array_parameter, operator, p_mut_gen, percentag
     return array_parameter
 
 def calculate_fitness(array, operator, percentage_per_element):
-    operator += "="
     fitness_percentage = 100/(len(array)-1)
     fitness = 0
     
