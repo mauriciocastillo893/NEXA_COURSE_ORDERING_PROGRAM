@@ -116,7 +116,7 @@ def mutation_for_array_parameter(array_parameter, operator, p_mut_gen, percentag
     print(f"\n\t[MUTATION] >> Mutation process completed by reaching the mutation percentage parameter [{p_mut_gen} %]. \n\t[MUTATION] >> Completed percentage:", percentage_applied, "% from", "100 % (default)" )
     return array_parameter
 
-def calculate_fitness(array, operator, percentage_per_element):
+def calculate_fitness(array, operator):
     fitness_percentage = 100/(len(array)-1)
     fitness = 0
     
@@ -217,7 +217,7 @@ def save_best_generation(name_file_report, best_array, fitness_reached, epoch):
         arr1_str = ', '.join(best_array)
         
         # Insertar los datos
-        ws.cell(row=2, column=start_column, value=epoch-4).alignment = Alignment(horizontal='center', vertical='center')
+        ws.cell(row=2, column=start_column, value=epoch).alignment = Alignment(horizontal='center', vertical='center')
         ws.cell(row=2, column=start_column + 1, value=arr1_str).alignment = Alignment(horizontal='center', vertical='center')
         ws.cell(row=2, column=start_column + 2, value=fitness_reached).alignment = Alignment(horizontal='center', vertical='center')
 
@@ -238,3 +238,11 @@ def save_best_generation(name_file_report, best_array, fitness_reached, epoch):
         wb.save(excel_file_path)
     else:
         messagebox.showerror("Error", f"El archivo {name_file_report} no existe. \nPor favor, verifica la existencia del archivo.")
+        
+def compare_fitness(previous_parameter, current_parameter):
+    if current_parameter > previous_parameter:
+        previous_parameter = current_parameter
+        return previous_parameter, True
+    else:
+        return previous_parameter, False
+    

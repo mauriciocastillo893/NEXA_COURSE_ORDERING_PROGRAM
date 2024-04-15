@@ -155,31 +155,59 @@ def obtain_data():
     p_mut_ind = p_mut_ind_value.get() if len(p_mut_ind_value.get()) else "100"
     p_mut_gen = p_mut_gen_value.get() if len(p_mut_gen_value.get()) else "100"
 
-    if not fitness.isdigit():
+    if fitness.isdigit():
+        print("Fitness received:", fitness, type(fitness))
+        if int(fitness) > 0 and int(fitness) <= 100:
+            pass
+        else:
+            messagebox.showerror("Error", "El valor permitido de Fitness debe ser entre 0 a 100")
+            return {"status": False}
+    else:
         messagebox.showerror("Error", "El valor de Fitness debe ser un número entero positivo.")
         return {"status": False}
 
     if not iterator == "-1":
         if iterator.isdigit():
-            pass
+            if int(iterator) > 0 and int(iterator) <= 225:    
+                pass
+            else:
+                messagebox.showerror("Error", "El valor permitido de Iteraciones debe ser entre 0 a 225")
+                return {"status": False}
 
         else:
             messagebox.showerror("Error", "El valor de Iteraciones debe ser un número entero positivo.")
             return {"status": False}
 
 
-    if not p_mut_cruza.isdigit():
+    if p_mut_cruza.isdigit():
+        if int(p_mut_cruza) > 0 and int(p_mut_cruza) <= 100:
+            pass
+        else: 
+            messagebox.showerror("Error", "El valor permitido de P. mut. cruza debe ser entre 0 a 100")
+            return {"status": False}
+    else:
         messagebox.showerror("Error", "El valor de P. mut. cruza debe ser un número entero positivo.")
         return {"status": False}
 
 
-    if not p_mut_ind.isdigit():
-        messagebox.showerror("Error", "El valor de P. mut. ind. debe ser un número entero positivo.")
+    if p_mut_ind.isdigit():
+        if int(p_mut_ind) > 0 and int(p_mut_ind) <= 100:
+            pass
+        else: 
+            messagebox.showerror("Error", "El valor permitido de P. mut. ind debe ser entre 0 a 100")
+            return {"status": False}
+    else:
+        messagebox.showerror("Error", "El valor de P. mut. ind debe ser un número entero positivo.")
         return {"status": False}
 
-
-    if not p_mut_gen.isdigit():
-        messagebox.showerror("Error", "El valor de P. mut. gen. debe ser un número entero positivo.")
+    if p_mut_gen.isdigit():
+        if int(p_mut_gen) > 0 and int(p_mut_gen) <= 100:
+            pass
+        else: 
+            messagebox.showerror("Error", "El valor permitido de P. mut. gen debe ser entre 0 a 100")
+            return {"status": False}
+    else:
+        messagebox.showerror("Error", "El valor de P. mut. gen debe ser un número entero positivo.")
         return {"status": False}
 
     fitness = int(fitness)

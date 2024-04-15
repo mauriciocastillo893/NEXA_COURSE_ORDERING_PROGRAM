@@ -17,12 +17,18 @@ current_epoch_infinite = 0
 name_file_report = ""
 progress_bar_ref = ""
 
+first_data_list_parameter = None
+second_data_list_parameter = None
+first_data_fitness = 0
+second_data_fitness = 0
+
 best_fitness = 0
 best_array = []
 best_epoch = 0
 
 def save_data(data, progress_bar):
     global epochs, p_mut_cruza, p_mut_ind, p_mut_gen, selected_option, fitness, current_epoch, current_epoch_infinite, name_file_report, progress_bar_ref
+    global first_data_list_parameter, second_data_list_parameter, first_data_fitness, second_data_fitness
     file_name = exc.save_default_data_to_excel(data)
     name_file_report = file_name
     fitness = data['fitness']
@@ -38,10 +44,20 @@ def save_data(data, progress_bar):
     print("\tEpochs:", epochs, "\n\tFitness:", fitness,"\n\tP_mut_cruza:", p_mut_cruza, "\n\tP_mut_ind:", p_mut_ind, "\n\tP_mut_gen:", p_mut_gen, "\n\tSelected option:", selected_option)
     
     result = upload_data_by_parameter(data['selected_option'][0])
+    result = [f"{value}-P{index + 1}" for index, value in enumerate(result)]
+    first_data_list_parameter = result
+    second_data_list_parameter = result[::-1]
+    operator = aux.define_operator(selected_option)
+    operator += "="
+    first_data_fitness = aux.calculate_fitness(first_data_list_parameter, operator)
+    second_data_fitness = aux.calculate_fitness(second_data_list_parameter, operator)
+    
     if result:
         form_pairs(result)
         print(f"\n\n\n[SYSTEM] Data uploaded successfully. Process finished.")
         print(f"Best Fitness: {best_fitness} \nBest Epoch: {best_epoch} \nBest Array: {best_array}")
+        aux.save_best_generation(name_file_report, best_array, best_fitness, best_epoch)
+        exc.crear_excel_cursos_ordenados()
     else:
         print("[SYSTEM] Data couldn't be uploaded. Please check the parameter 'selected_option' value.")
     
@@ -71,7 +87,7 @@ def form_pairs(data_list, second_data_list = [], array1_fitness = 0, array2_fitn
     fitness = calculate_fitness_base(fitness, current_epoch)
     print(f"\n[FORMING PAIRS] Fitness value to reach: {fitness}")
     if epochs == -1 or current_epoch < epochs:
-        if array1_fitness >= fitness:
+        if array1_fitness >= first_data_fitness:
             if epochs == -1:
                 print(f"\n[FORMING PAIRS] Best fitness value found. Current Epoch: {'<<Hallar mejor fitness>>' if epochs == -1 else current_epoch} Process finished.\n[FORMING PAIRS] Best array [first_list]:\n\t{data_list}")
                 print(f"[FORMING PAIRS] Best fitness obtained: {array1_fitness}")
@@ -88,7 +104,7 @@ def form_pairs(data_list, second_data_list = [], array1_fitness = 0, array2_fitn
         else:
             pass
         
-        if array2_fitness >= fitness:
+        if array2_fitness >= second_data_fitness:
             if epochs == -1:
                 print(f"\n[FORMING PAIRS] Best fitness value found. Current Epoch: {'<<Hallar mejor fitness>>' if epochs == -1 else current_epoch} Process finished.\n[FORMING PAIRS] Best array [second_list]:\n\t{second_data_list}")
                 print(f"[FORMING PAIRS] Best fitness obtained: {array2_fitness}")
@@ -106,8 +122,8 @@ def form_pairs(data_list, second_data_list = [], array1_fitness = 0, array2_fitn
         print("\n[FORMING PAIRS] Epoch: ", current_epoch)
         first_pair = data_list
         
-        if current_epoch == 0 and current_epoch_infinite == 0:
-            first_pair = [f"{value}-P{index + 1}" for index, value in enumerate(first_pair)]
+        # if current_epoch == 0 and current_epoch_infinite == 0:
+        #     first_pair = [f"{value}-P{index + 1}" for index, value in enumerate(first_pair)]
             
         if not len(second_data_list):
             second_pair = first_pair[::-1]
@@ -130,13 +146,11 @@ def form_pairs(data_list, second_data_list = [], array1_fitness = 0, array2_fitn
             best_fitness = array1_fitness
             best_array = first_pair
             best_epoch = epoch_parameter_f_p
-            # aux.save_best_generation(name_file_report, first_pair, array1_fitness, epoch_parameter_f_p)
             
         if array2_fitness > best_fitness:
             best_fitness = array2_fitness
             best_array = second_pair
             best_epoch = epoch_parameter_f_p
-            # aux.save_best_generation(name_file_report, second_pair, array2_fitness, epoch_parameter_f_p)
         
         information_crossover(first_pair, second_pair, current_epoch, current_epoch_infinite)
     else:
@@ -186,7 +200,8 @@ def mutation(first_pair, second_pair, current_epoch, current_epoch_infinite):
     pruning(arr1, arr2, operator, percentage_per_element, current_epoch, current_epoch_infinite)
     
 def pruning(first_pair, second_pair, operator, percentage_per_element, current_epoch, current_epoch_infinite):
-    # global current_epoch_infinite
+    global first_data_list_parameter, second_data_list_parameter,first_data_fitness, second_data_fitness
+    
     operator += "="
     print("\n[PRUNING] Epoch: ", current_epoch)
     print("[PRUNING] Operator to use:", operator)
@@ -195,10 +210,10 @@ def pruning(first_pair, second_pair, operator, percentage_per_element, current_e
     print("[PRUNING] Second pair:\n\t", second_pair, "\n")
     
     print("[PRUNING] Calculating fitness for FIRST ARRAY")
-    fitness_arr1 = aux.calculate_fitness(first_pair, operator, percentage_per_element)
+    fitness_arr1 = aux.calculate_fitness(first_pair, operator)
     
     print("[PRUNING] Calculating fitness for SECOND ARRAY")
-    fitness_arr2 = aux.calculate_fitness(second_pair, operator, percentage_per_element)
+    fitness_arr2 = aux.calculate_fitness(second_pair, operator)
     
     if epochs == -1:
         pass
@@ -212,8 +227,37 @@ def pruning(first_pair, second_pair, operator, percentage_per_element, current_e
     else:
         epoch_parameter = current_epoch
     current_epoch_infinite += 1
+    
+    # if first_data_list_parameter
+    print("First data list parameter", first_data_list_parameter)
+    print("First fitness", first_data_fitness)
+    print("Second data list parameter", second_data_list_parameter)
+    print("Second fitness", second_data_fitness)
+    
+    fitness_arr1, change_array = aux.compare_fitness(# The code `first_data_fitness` is a variable
+    # name in Python. It is not performing any
+    # specific action in the code snippet provided.
+    # It is simply a variable name that could
+    # potentially hold some data related to fitness.
+    first_data_fitness, fitness_arr1)
+    if change_array:
+        first_data_list_parameter = first_pair
+        first_data_fitness = fitness_arr1
+        print("[PRUNING] FIRST DATA LIST parameter has been updated.")
+    else: 
+        first_pair = first_data_list_parameter
+    fitness_arr2, change_array2 = aux.compare_fitness(second_data_fitness, fitness_arr2)
+    if change_array2:
+        second_data_list_parameter = second_pair
+        second_data_fitness = fitness_arr2
+        print("[PRUNING] SECOND DATA LIST parameter has been updated.")
+    else: 
+        second_pair = second_data_list_parameter
+    
     aux.save_generation(name_file_report, first_pair, second_pair, epoch_parameter, fitness_arr1, fitness_arr2)
     time.sleep(.025)
+    
+    
     form_pairs(first_pair, second_pair, fitness_arr1, fitness_arr2, epoch_parameter, current_epoch_infinite)
     # Los mejores son puestos debajo de los 2 primeros creados al inicio en el excel de "reports" actual del programa, y hasta
     # abajo despues de colocar cada resultado por epoca, se pone el mejor de todos los resultados.
@@ -223,3 +267,6 @@ def calculate_fitness_base(fitness, current_epoch):
         fitness -= 1
     
     return fitness
+
+# 1. Crear un excel donde se miren los cursos ordenados por el mejor fitness obtenido
+# * En el excel donde se pone el fitnes no se muestra correctamente a veces, verificar
