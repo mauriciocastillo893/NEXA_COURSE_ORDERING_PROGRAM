@@ -2,6 +2,10 @@ import openpyxl
 from tkinter import filedialog
 import pandas as pd
 import os
+from datetime import datetime
+from tkinter import messagebox
+
+file_name_made = ""
 
 def open_excel_file():
     # Obtener la ruta del directorio del script actual
@@ -49,6 +53,9 @@ def process_excel_file(df_file):
     df_requirements['conversion_num'] = df_requirements['size'].apply(lambda x: 0 if pd.isna(x) else len(str(x).split(',')))
     df_requirements.to_excel('temp_files/requirements.xlsx', index=False)
 
+    center_excel_content('temp_files/duration.xlsx')
+    center_excel_content('temp_files/difficulty.xlsx')
+    center_excel_content('temp_files/requirements.xlsx')
     print("\n[EXCEL WHILE] Files created successfully in the 'temp_files' folder.")
 
 def convert_difficulty(difficulty):
@@ -65,3 +72,58 @@ def convert_difficulty(difficulty):
         return 4
     else:
         return 0
+
+def save_default_data_to_excel(data):
+    global file_name_made
+    # Get the current date and time
+    now = datetime.now()
+    date = now.strftime("%d-%m-%Y")
+    time = now.strftime("%H%M%S")
+
+    # Create the file name
+    file_name = f"report_{date}_{time}.xlsx"
+    file_name_made = file_name
+
+    # Create the folder if it doesn't exist
+    if not os.path.exists("reports"):
+        os.makedirs("reports")
+
+    # Create the Excel workbook
+    wb = openpyxl.Workbook()
+
+    # Select the active sheet
+    ws = wb.active
+
+    # Write the data to the Excel file
+    ws.append(["Order by", "Epochs", "P_mut_cruza", "P_mut_ind", "P_mut_gen"])
+    ws.append([data["selected_option"], data["iterator"], data["p_mut_cruza"], data["p_mut_ind"], data["p_mut_gen"]])
+
+    # Save the workbook
+    wb.save(os.path.join("reports", file_name))
+    center_excel_content(os.path.join("reports", file_name))
+    return file_name
+    
+
+def center_excel_content(file_path):
+    if os.path.exists(file_path):
+        wb = openpyxl.load_workbook(file_path)
+        ws = wb.active
+
+        # Centrar el contenido de todas las celdas
+        for row in ws.iter_rows():
+            for cell in row:
+                cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+
+        wb.save(file_path)
+    else:
+        print(f"El archivo {file_path} no existe.")
+        
+def open_excel_made():
+    excel_file_path = os.path.join("reports", file_name_made)
+    
+    if os.path.exists(excel_file_path):
+        os.startfile(excel_file_path)
+        return
+    else:
+        messagebox.showerror("EXCEL WHEEL", f"Ocurrió un error inesperado. \nNo podemos encontrar el archivo Excel guardado.\n{file_name_made}")
+        return

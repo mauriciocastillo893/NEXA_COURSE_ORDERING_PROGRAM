@@ -1,3 +1,7 @@
+import os
+from tkinter import messagebox
+import openpyxl
+from openpyxl.styles import Alignment
 
 def swap_elements(arr1, arr2, p_mut_cruza, p_mut_ind):
     if len(arr1) < 3 or len(arr2) < 3 or p_mut_cruza < 50:
@@ -126,3 +130,111 @@ def calculate_fitness(array, operator, percentage_per_element):
     print("\t[AUXILIAR WHEEL]")
     print("\t[FITNESS] Fitness calculated:", fitness, "%\n")
     return fitness
+
+def save_generation(name_file_report, arr1=[], arr2=[], current_epoch=0, fitness_arr1=0, fitness_arr2=0):
+    # Ruta completa del archivo Excel
+    print(f"\n[AUXILIAR WHEEL]\n[SAVE GENERATION] Saving the generation {current_epoch} in the file {name_file_report}")
+    excel_file_path = os.path.join("reports", name_file_report)
+
+    if os.path.exists(excel_file_path):
+        # Cargar el archivo Excel existente
+        wb = openpyxl.load_workbook(excel_file_path)
+        ws = wb.active
+
+        # Definir la fila de inicio para insertar los datos
+        start_row = 5
+
+        # Calcular el índice de la fila actual para arr1
+        current_row_arr1 = start_row + current_epoch * 2
+
+        # Calcular el índice de la fila actual para arr2
+        current_row_arr2 = current_row_arr1 + 1
+
+        # Insertar el encabezado si es la primera iteración
+        if current_epoch == 0:
+            headers = ["Num", "Result", "Fitness", "Epoch"]
+            for col, header in enumerate(headers, start=1):
+                ws.cell(row=start_row - 1, column=col, value=header)
+                # Alinear el encabezado al centro
+                ws.cell(row=start_row - 1, column=col).alignment = Alignment(horizontal='center', vertical='center')
+
+        arr1_str = ', '.join(arr1)
+        arr2_str = ', '.join(arr2)
+        
+        if arr1:
+            # Insertar los datos de arr1 en las columnas A, B, C y D respectivamente
+            ws.cell(row=current_row_arr1, column=1, value=current_row_arr1-4).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=current_row_arr1, column=2, value=arr1_str).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=current_row_arr1, column=3, value=fitness_arr1).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=current_row_arr1, column=4, value=current_epoch).alignment = Alignment(horizontal='center', vertical='center')
+
+        if arr2:
+            # Insertar los datos de arr2 en las columnas A, B y C respectivamente
+            ws.cell(row=current_row_arr2, column=1, value=current_row_arr2-4).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=current_row_arr2, column=2, value=arr2_str).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=current_row_arr2, column=3, value=fitness_arr2).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=current_row_arr2, column=4, value=current_epoch).alignment = Alignment(horizontal='center', vertical='center')
+            
+        # Ajustar el ancho de las columnas
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter  # Obtener el nombre de la columna
+            for cell in col:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            ws.column_dimensions[column].width = adjusted_width
+
+        # Guardar el archivo Excel
+        wb.save(excel_file_path)
+    else:
+        messagebox.showerror("Error", f"El archivo {name_file_report} no existe. \nPor favor, verifica la existencia del archivo.")
+
+def save_best_generation(name_file_report, best_array, fitness_reached, epoch):
+    # Ruta completa del archivo Excel
+    print(f"\n[AUXILIAR WHEEL]\n[SAVE GENERATION] Saving the best generation {epoch} in the file {name_file_report}")
+    excel_file_path = os.path.join("reports", name_file_report)
+
+    if os.path.exists(excel_file_path):
+        # Cargar el archivo Excel existente
+        wb = openpyxl.load_workbook(excel_file_path)
+        ws = wb.active
+
+        # Definir la fila de inicio para insertar los datos
+        start_row = 1
+        start_column = 7
+
+        # Cabeceras
+        headers = ["Epoch", "Best Result", "Fitness reached"]
+        for col, header in enumerate(headers, start=start_column):
+            ws.cell(row=start_row, column=col, value=header)
+            # Alinear el encabezado al centro
+            ws.cell(row=start_row, column=col).alignment = Alignment(horizontal='center', vertical='center')
+
+        arr1_str = ', '.join(best_array)
+        
+        # Insertar los datos
+        ws.cell(row=2, column=start_column, value=epoch-4).alignment = Alignment(horizontal='center', vertical='center')
+        ws.cell(row=2, column=start_column + 1, value=arr1_str).alignment = Alignment(horizontal='center', vertical='center')
+        ws.cell(row=2, column=start_column + 2, value=fitness_reached).alignment = Alignment(horizontal='center', vertical='center')
+
+        # Ajustar el ancho de las columnas
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter  # Obtener el nombre de la columna
+            for cell in col:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            ws.column_dimensions[column].width = adjusted_width
+
+        # Guardar el archivo Excel
+        wb.save(excel_file_path)
+    else:
+        messagebox.showerror("Error", f"El archivo {name_file_report} no existe. \nPor favor, verifica la existencia del archivo.")

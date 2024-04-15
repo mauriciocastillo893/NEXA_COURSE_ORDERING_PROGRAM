@@ -5,6 +5,7 @@ from datetime import datetime
 import logistic.excel_wheel as excel_wheel
 import logistic.main_wheel as main_wheel
 import os
+import time
 
 ctk.set_appearance_mode('dark')
 ctk.set_default_color_theme("blue")
@@ -31,8 +32,11 @@ def start_application():
             system_message()
             pass
         progress_bar.start()
-        main_wheel.save_data(data)
-    # progress_bar.step()
+        main_wheel.save_data(data, progress_bar)
+        progress_bar.stop()
+        response = messagebox.askquestion("EXCEL WHEEL", "Proceso de ordenamiento completado. \n¿Quieres abrir el archivo Excel?")
+        if response == 'yes':
+            excel_wheel.open_excel_made()
 
 def center_window(window):
     global width, height, screen_height, screen_width, x, y
